@@ -4,7 +4,7 @@
 ![alt text](https://parencode.github.io/periodicspace/images/universoMini_logo3-1024x1024.png)
 
 
-# Bienvenido a mi Repositorio en GitHub!
+# Bienvenido al Repositorio de PeriodicSpace en GitHub!
 
 Este repositorio está dedicado a mostrar la forma de los distintos átomos de la tabla periódica.
 
