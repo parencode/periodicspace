@@ -1,1 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Explora el mundo del electromagnetismo con nuestro Simulador de Campo Electromagnético, desarrollado con Three.js y OrbitControls. Visualiza campos eléctricos y magnéticos en 3D, interactúa con partículas cargadas, y personaliza parámetros físicos con Dat.GUI. ¡Descubre cómo se comportan las cargas eléctricas y las corrientes en esta experiencia de visualización y animación interactiva! / Explore the world of electromagnetism with our Electromagnetic Field Simulator, developed using Three.js and OrbitControls. Visualize electric and magnetic fields in 3D, interact with charged particles, and customize physical parameters with Dat.GUI. Discover how electric charges and currents behave in this interactive visualization and animation experience!" />
+<meta name="keywords" content="Simulador de Campo Electromagnético, Electromagnetic Field Simulator, Three.js, OrbitControls, Campo Eléctrico, Electric Field, Campo Magnético, Magnetic Field, Partículas Cargadas, Charged Particles, Dat.GUI, PolarGridHelper, Visualización 3D, 3D Visualization, Animación Interactiva, Interactive Animation, Física, Physics, WebGL, Carga Eléctrica, Electric Charge, Movimiento de Partículas, Particle Motion, Visualización de Vectores, Vector Visualization, Interacción de Usuario, User Interaction, Desarrollo Web, Web Development, Programación JavaScript, JavaScript Programming, Gráficos 3D, 3D Graphics, Renderizado en Tiempo Real, Real-Time Rendering" />
+    <title>PeriodicSpace - Simulations: Electromagnetic Field</title>
+    <style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        cursor: crosshair;
+    }
+
+    #animate {
+        position: absolute;
+        top: 20px;
+        color: white;
+    }
+
+    canvas {
+        outline: none;
+        -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+        /* mobile webkit */
+    }
+    #info{
+        position: absolute;
+        width: 100vW;
+        color: white;
+        text-align: center;
+        pointer-events: none;
+    }
+    </style>
+</head>
+
+<body>
+
+<div id="info">
+    <h2>PeriodicSpace - Simulations: Electromagnetic Field</h2>
+</div>
+
+    <!-- <div>
+        "¡Explora el fascinante mundo del electromagnetismo con nuestro Simulador de Campo Electromagnético! Con tecnología avanzada de Three.js y OrbitControls, esta herramienta te permite visualizar y experimentar con campos eléctricos y magnéticos en un entorno 3D interactivo. Desde la manipulación de partículas cargadas hasta la animación de vectores y la personalización de parámetros físicos con Dat.GUI, ¡la física cobra vida en tu navegador! ¡Descubre cómo se comportan las cargas eléctricas y las corrientes en este emocionante viaje a través de la ciencia y la tecnología! #Electromagnetismo #Simulación #FísicaInteractiva #ThreeJS #OrbitControls"
+    </div>
+     -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js"></script>
+    <script>
+ let k=1;const vectorDistance=1;var numGrid=.3,gridSize=vectorDistance,gridStep=vectorDistance/10,scene=new THREE.Scene,camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,.1,1e3),renderer=(camera.position.z=1,new THREE.WebGLRenderer),controls=(renderer.setSize(window.innerWidth,window.innerHeight),document.body.appendChild(renderer.domElement),new THREE.OrbitControls(camera,renderer.domElement));controls.enableDamping=!0,controls.dampingFactor=.25;const radius=5,sectors=16,rings=8,divisions=64,helper=new THREE.PolarGridHelper(radius,sectors,rings,divisions);scene.add(helper);var selectedParticle=null,animateScene=!1,setmagneticField=!1,speed=1,startTime=0,elapsedTime=0;let maxZ=0,minZ=.1;for(var showGrid=!0,selectedParticleIndex=null,particleOptions={},i=0;i<4;i++)particleOptions["Partícula "+(i+1)]=i;var guiParams={animate:!1,setmagneticField:!1,speed:1,maxZ:0,minZ:.1,showGrid:!0,selectedParticle:null,k:1},gui=new dat.GUI,addParticleFolder=(gui.add(guiParams,"k").name("k").onChange(function(e){k=e,updateFieldVectors()}),gui.add(guiParams,"animate").onChange(function(e){(animateScene=e)&&(startTime=performance.now())}),gui.add(guiParams,"setmagneticField").onChange(function(e){setmagneticField=e,updateFieldVectors()}),gui.add(guiParams,"speed",0,2).step(.1).onChange(function(e){speed=e}),gui.add(guiParams,"showGrid").onChange(function(e){showGrid=e,helper.visible=showGrid}),gui.addFolder("Añadir Partícula"));function calculateElectricField(e,i,t){var a=i.distanceTo(t);return{electricField:(new THREE.Vector3).subVectors(i,t).normalize(),length:guiParams.k*e/(a*a)}}function calculateMagneticField(e,i,t){var i=i.distanceTo(t),a=e.length(),a=+guiParams.k*a/(i*i);return{magneticField:(new THREE.Vector3).crossVectors(e,t).normalize(),length:a}}function updateFieldVectors(){let n=new THREE.Vector3(0,0,0),r=new THREE.Vector3(0,0,0);particles.forEach(a=>{a.children.forEach(e=>{const i=new THREE.Vector3;a.getWorldPosition(n),e.getWorldPosition(r);var t=calculateElectricField(a.charge,n,r);i.add(t.electricField.multiplyScalar(t.length)),setmagneticField&&(new THREE.Vector3,t=calculateMagneticField(a.velocity,n,r),i.add(t.magneticField.multiplyScalar(t.length))),particles.forEach(e=>{e!==a&&(e=calculateElectricField(e.charge,e.getWorldPosition(n),r),i.add(e.electricField.multiplyScalar(e.length)))}),e.line.material.color=getColorByDistance(i.length(),10,a.charge),e.cone.material.color=getColorByDistance(i.length(),10,a.charge),e.setDirection(i.normalize())})})}function getColorByDistance(e,i,t){var a=new THREE.Color(16711680);let n=new THREE.Color(65280);t<0&&(n=new THREE.Color(64767));t=Math.min(e*e/i,1);return(new THREE.Color).lerpColors(a,n,t)}function createVector(e,i,t){e=new THREE.ArrowHelper(i.electricField,e,.07,getColorByDistance(i.length,10,t.charge));t.add(e)}addParticleFolder.add(guiParams,"maxZ",0,2).step(.1).onChange(function(e){maxZ=e}),addParticleFolder.add(guiParams,"minZ",0,2).step(.1).onChange(function(e){minZ=e}),addParticleFolder.add({addParticle:addParticle},"addParticle").name("Añadir Partícula");let numParticulas=0;var particles=[createParticle(new THREE.Color(64767),1,0,0,0),createParticle(new THREE.Color(65280),-1,0,.1,0),createParticle(new THREE.Color(65280),-1,0,-.1,0)],initialPositions=particles.map(e=>e.position.clone()),ambientLight=new THREE.AmbientLight(4210752),directionalLight=(scene.add(ambientLight),new THREE.DirectionalLight(16777215,.5));function addParticle(){Math.random();var e=createParticle(new THREE.Color(65280),Math.random()<.5?1:-1,8*Math.random()-4,0,0);particles.push(e),initialPositions.push(e.position.clone())}function removeParticle(e){if(0<=e&&e<particles.length){var i=particles[e],i=(scene.remove(i),particles.splice(e,1),initialPositions.splice(e,1),"Partícula "+(e+1));gui.__folders[i].domElement.parentNode.removeChild(gui.__folders[i].domElement),delete gui.__folders[i];for(var t=e+1;t<=particles.length;t++)gui.__folders["Partícula "+(t+1)]&&delete gui.__folders["Partícula "+(t+1)]}}directionalLight.position.set(0,1,0),scene.add(directionalLight);let newPosition=new THREE.Vector3;function animate(){requestAnimationFrame(animate);const currentTime=performance.now();if(animateScene){const deltaTime=(currentTime-startTime)/1e3;elapsedTime+=deltaTime,particles.forEach(function(particle,i){if(1==particle.animate){const newPosition=new THREE.Vector3(eval(particle.moveX),eval(particle.moveY),eval(particle.moveZ)),positionDifference=newPosition.clone().sub(particle.position);particle.velocity.copy(positionDifference.divideScalar(deltaTime)),particle.position.copy(newPosition)}}),updateFieldVectors()}controls.target=selectedParticle?selectedParticle.position:new THREE.Vector3(0,0,0),controls.update(),renderer.render(scene,camera),startTime=currentTime}animate(),window.addEventListener("resize",function(){camera.aspect=window.innerWidth/window.innerHeight,camera.updateProjectionMatrix(),renderer.setSize(window.innerWidth,window.innerHeight)});var defaultMoveXFunction="speed * Math.cos(elapsedTime * (i / 10)) * 2 * (i / 4)",moveXFunction=defaultMoveXFunction;function createParticle(e,i,t,a,n){var r=new THREE.SphereGeometry(.01,32,32),o=new THREE.MeshBasicMaterial({color:e}),c=new THREE.Mesh(r,o);c.charge=i,c.color=e,c.vectorMeshes=[],c.animate=!0,c.moveX="speed * Math.cos(elapsedTime * (i / 10)) * 2 * (i / 4)",c.moveY="particle.position.y",c.moveZ="particle.position.z",c.velocity=new THREE.Vector3;for(let t=-gridSize;t<=gridSize;t+=gridStep)for(let i=-gridSize;i<=gridSize;i+=gridStep)for(let e=-gridSize;e<=gridSize;e+=gridStep){var l=new THREE.Vector3(t,i,e).add(c.position);c.position.distanceTo(l)<=vectorDistance&&e<=maxZ&&e>=-minZ&&createVector(l,calculateElectricField(c.charge,c.position,l),c)}c.position.set(t,a,n),scene.add(c);r=gui.addFolder("Partícula "+(numParticulas+1)),r.add(c,"charge",-2,2).step(1).onChange(function(e){c.charge=e,updateFieldVectors()}),r.add(c.position,"x",-10,10).onChange(function(){updateFieldVectors()}),r.add(c.position,"y",-10,10).onChange(function(){updateFieldVectors()}),r.add(c.position,"z",-10,10).onChange(function(){updateFieldVectors()}),o=r.addFolder("Movement");return o.add(c,"animate").onChange(function(e){c.animate=e}),o.add(c,"moveX").name("moveX").onChange(function(e){c.moveX=e}),o.add(c,"moveY").name("moveY").onChange(function(e){c.moveX=e}),o.add(c,"moveZ").name("moveZ").onChange(function(e){c.moveX=e}),o.open(),r.add({SelectParticle:()=>{selectedParticleIndex=particles.indexOf(c),selectedParticle=particles[particles.indexOf(c)]}},"SelectParticle").name("Select"),r.add({removeParticle:()=>removeParticle(particles.indexOf(c))},"removeParticle").name("Eliminar"),numParticulas++,c}
+    </script>
+</body>
+
+</html>
