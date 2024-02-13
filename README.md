@@ -21,8 +21,8 @@ Es una plataforma en línea que ofrece información sobre el espacio y la cienci
 
 
 ## Redes Sociales
-
-- Sigue nuestra página en [Facebook](https://www.facebook.com/Periodicspace).
-- Sigue nuestra página en [Instagram](https://www.instagram.com/periodicspace_com/).
-- Sigue nuestra página en [twitter](https://twitter.com/periodicspace).
+- [Youtube](https://www.youtube.com/channel/UCqSA-YYLNLYzMyE0x_x4SVw)
+- [Facebook](https://www.facebook.com/Periodicspace)
+- [Instagram](https://www.instagram.com/periodicspace_com/)
+- [twitter](https://twitter.com/periodicspace)
 
